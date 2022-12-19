@@ -132,5 +132,5 @@ dmypy.json
 .idea/
 
 # result files
-.csv
-.png
+*.csv
+*.png
