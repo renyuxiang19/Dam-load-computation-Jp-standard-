@@ -41,8 +41,8 @@ class Dam:
         """
         モジュールを呼び出し動水圧を計算する。
         :param num:　計算する点の数。
-        :param plot:　計算結果を描き出すか。
-        :param write:　計算結果を書き出すか。
+        :param plot:　計算結果を描き出すか否か。
+        :param write:　計算結果を書き出すか否か。
         :return:
         """
         h = np.linspace(self.dep, self.y[0], num)
