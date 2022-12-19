@@ -5,6 +5,7 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+
 class Dam:
     """
     ダムの載荷を計算する
@@ -57,7 +58,7 @@ class Dam:
         if write:
             np.savetxt("Dynamic_water_pressure.csv", self.water_pressure.T, fmt='%.4e', delimiter=",",
                        header="depth, pressure", comments="")
-        pass
+        return self
 
     def plot_dyn_wat(self):
         mpl.use('agg')
@@ -68,7 +69,7 @@ class Dam:
         ax.set_xlabel('Dynamic_water_pressure(KN/m2)')
         ax.set_ylabel('Depth(m)')
         fig.savefig("Dynamic_water_pressure.png")
-        pass
+        return self
 
     def cal_buoyancy(self, num=100, plot=False, write=False):
         """
@@ -87,7 +88,7 @@ class Dam:
         if write:
             np.savetxt("Buoyancy.csv", self.buoyancy.T, fmt='%.4e', delimiter=",", header="distance, pressure",
                        comments="")
-        pass
+        return self
 
     def plot_buoyancy(self):
         mpl.use('agg')
@@ -97,4 +98,4 @@ class Dam:
         ax.set_xlabel('Distance(m)')
         ax.set_ylabel('Buoyancy(KN/m2)')
         fig.savefig("Buoyancy.png")
-        pass
+        return self

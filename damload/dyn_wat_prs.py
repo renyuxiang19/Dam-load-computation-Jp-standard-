@@ -24,5 +24,3 @@ def zanger(cm: NDArray, dep: NDArray, h: float, k: float, w=9.8) -> NDArray:
     c_val = cm * dep_ratio
     pd = c_val * w * k * h
     return pd
-
-
