@@ -3,7 +3,7 @@ from damload import dyn_wat_prs as wat
 from damload import buoyancy as buo
 from scipy import interpolate
 import matplotlib.pyplot as plt
-
+import matplotlib as mpl
 
 class Dam:
     """
@@ -35,9 +35,17 @@ class Dam:
         self.dep_down = depth_down
         self.__slope = interpolate.interp1d(x=self.y, y=self.x)
         self.k = k
+        pass
 
-    def cal_dyn_water(self, num=100, plot=False):
-        h = np.linspace(self.y[0], self.dep, num)
+    def cal_dyn_water(self, num=100, plot=False, write=False):
+        """
+        モジュールを呼び出し動水圧を計算する。
+        :param num:　計算する点の数。
+        :param plot:　計算結果を描き出すか。
+        :param write:　計算結果を書き出すか。
+        :return:
+        """
+        h = np.linspace(self.dep, self.y[0], num)
         x = self.__slope(h)
         slant = np.arctan(np.diff(x) / np.diff(h))  # 傾斜角度
         slant = np.append(slant, slant[-1])
@@ -46,21 +54,47 @@ class Dam:
         self.water_pressure = np.array([depth, wat.zanger(cm=cm_val, dep=depth, h=self.dep, k=self.k, w=self.w0)])
         if plot:
             self.plot_dyn_wat()
+        if write:
+            np.savetxt("Dynamic_water_pressure.csv", self.water_pressure.T, fmt='%.4e', delimiter=",",
+                       header="depth, pressure", comments="")
         pass
 
     def plot_dyn_wat(self):
-        plt.plot(self.water_pressure[0], self.water_pressure[1])
+        mpl.use('agg')
+        fig, ax = plt.subplots(figsize=(5, 8), layout='tight')
+        ax.plot(self.water_pressure[1], self.water_pressure[0])
+        ax.invert_yaxis()
+        ax.invert_xaxis()
+        ax.set_xlabel('Dynamic_water_pressure(KN/m2)')
+        ax.set_ylabel('Depth(m)')
+        fig.savefig("Dynamic_water_pressure.png")
         pass
 
-    def cal_buoyancy(self, num=100, plot=False):
+    def cal_buoyancy(self, num=100, plot=False, write=False):
+        """
+        モジュールを呼び出し揚圧力を計算する。
+        :param num: 計算する点の数。
+        :param plot: 計算結果を描き出すか否か。
+        :param write: 計算結果を書き出すか否か。
+        :return:
+        """
         x = np.linspace(0, self.length, num)
         buoyancy_val = buo.buoyancy(hu=self.dep, hd=self.dep_down,
                                     length=self.length, loc_drain=self.loc_drain, w=self.w0)(x)
         self.buoyancy = np.array([x, buoyancy_val])
         if plot:
             self.plot_buoyancy()
+        if write:
+            np.savetxt("Buoyancy.csv", self.buoyancy.T, fmt='%.4e', delimiter=",", header="distance, pressure",
+                       comments="")
         pass
 
     def plot_buoyancy(self):
-        plt.plot(self.buoyancy[0], self.buoyancy[1])
+        mpl.use('agg')
+        fig, ax = plt.subplots(figsize=(12, 4), layout='tight')
+        ax.plot(self.buoyancy[0], self.buoyancy[1])
+        ax.invert_yaxis()
+        ax.set_xlabel('Distance(m)')
+        ax.set_ylabel('Buoyancy(KN/m2)')
+        fig.savefig("Buoyancy.png")
         pass
