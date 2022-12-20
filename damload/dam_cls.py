@@ -56,8 +56,8 @@ class Dam:
         if plot:
             self.plot_dyn_wat()
         if write:
-            np.savetxt("Dynamic_water_pressure.csv", self.water_pressure.T, fmt='%.4e', delimiter=",",
-                       header="depth, pressure", comments="")
+            np.savetxt("Dynamic_water_pressure.csv", self.water_pressure.T, fmt='%.5e', delimiter=",",
+                       header="Depth, Pressure", comments="")
         return self
 
     def plot_dyn_wat(self):
@@ -66,7 +66,7 @@ class Dam:
         ax.plot(self.water_pressure[1], self.water_pressure[0])
         ax.invert_yaxis()
         ax.invert_xaxis()
-        ax.set_xlabel('Dynamic_water_pressure(KN/m2)')
+        ax.set_xlabel('Dynamic water pressure(KN/m2)')
         ax.set_ylabel('Depth(m)')
         fig.savefig("Dynamic_water_pressure.png")
         return self
@@ -86,7 +86,7 @@ class Dam:
         if plot:
             self.plot_buoyancy()
         if write:
-            np.savetxt("Buoyancy.csv", self.buoyancy.T, fmt='%.4e', delimiter=",", header="distance, pressure",
+            np.savetxt("Buoyancy.csv", self.buoyancy.T, fmt='%.5e', delimiter=",", header="Distance, Buoyancy",
                        comments="")
         return self
 
