@@ -8,7 +8,7 @@ import matplotlib as mpl
 
 class Dam:
     """
-    ダムの載荷を計算する
+    ダムの載荷を計算する。
     """
 
     def __init__(self, x: list, y: list, length: float, depth_up: float, loc_drain=None, k=1.5, depth_down=0.0):
@@ -18,10 +18,10 @@ class Dam:
         ｘ と ｙ は上流側の堤体表面を決める点の座標
         :param depth_up: ダム直上流部における水位から基礎地盤までの水深。
         :param depth_down: ダム直下流部における水位から基礎地盤までの水深。
-        :param x: 水平方向 (0から)
-        :param y: 鉛直方向, 高さ (0から)
-        :param length: 堤体の上流端から下流端までの距離。
-        :param loc_drain: 堤体の上流端から排水孔までの距離。
+        :param x: 水平方向 (上流端を0にする)
+        :param y: 鉛直方向, 高さ (上流端を0にする)
+        :param length: 堤体の上流端から下流端までの水平距離。
+        :param loc_drain: 堤体の上流端から排水孔までの水平距離。
         :param k: 堤体の設計震度。
         :return: None
         """

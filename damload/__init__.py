@@ -1,1 +1,1 @@
-from .DamClass import Dam
+from .dam_cls import Dam
