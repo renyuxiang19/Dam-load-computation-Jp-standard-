@@ -1,4 +1,6 @@
 import damload
-example = damload.Dam(x=[0, 4.9, 4.9], y=[0, 20, 63.5], length=56, depth_up=63.5, loc_drain=None)
-example.cal_dyn_water(plot=True, write=True, offset=143.5, multiplier=1000.0)
-example.cal_buoyancy(plot=True, write=True, offset=-28.0, multiplier=1000.0)
+
+kamitsu = damload.Dam(name="Kamitsu", x=[0, 4.9, 4.9], y=[0, 20, 63.5], length=56, depth_up=58.5, depth_mud=5,
+                      loc_drain=None, k=0.14)
+kamitsu.cal_load(load_names=["Dynamic", "Static", "Mud"], offset=80.0, unit_converter=1000.0)
+kamitsu.cal_load(load_names=["Buoyancy"], offset=-28.0, unit_converter=1000.0)
