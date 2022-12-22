@@ -73,7 +73,7 @@ class Dam:
                 self.__cal_buoyancy(num=num, offset=offset, unit_converter=unit_converter, plot=plot, write=write)
             else:
                 raise ValueError(
-                    "load_names should be a str list which contains 'Dynamic', 'Static', 'Mud' or 'Buoyancy'.")
+                    "'load_names' should be a str list which contains 'Dynamic', 'Static', 'Mud' or 'Buoyancy'.")
         return self
 
     def __cal_dyn_water(self, num=100, offset=0.0, unit_converter=1.0, plot=True, write=True):
