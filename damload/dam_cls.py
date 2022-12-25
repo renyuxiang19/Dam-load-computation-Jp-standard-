@@ -13,7 +13,7 @@ class Dam:
     """
 
     def __init__(self, name, x: list, y: list, length: float, depth_up: float, depth_mud: float, loc_drain=None, k=0.14,
-                 depth_down=0.0, w0=9.8, w_mud=12.0, ce=0.5):
+                 depth_down=0.0, w0=9.8, w_mud=10.0, ce=0.5):
         """
         堤体の断面形状等のパラメーターを設定する。
         座標の零点は堤体の上流端。
@@ -74,6 +74,9 @@ class Dam:
             else:
                 raise ValueError(
                     "'load_names' should be a str list which contains 'Dynamic', 'Static', 'Mud' or 'Buoyancy'.")
+
+        if "Static" and "Mud" in load_names:
+            self.__side_syn(num=num, offset=offset, unit_converter=unit_converter, plot=plot, write=write)
         return self
 
     def __cal_dyn_water(self, num=100, offset=0.0, unit_converter=1.0, plot=True, write=True):
@@ -159,6 +162,21 @@ class Dam:
         y = np.linspace(self.y[0], h, num)
         x = self.__slope(y)
         return x, y
+
+    def __side_syn(self, num=10, offset=0.0, unit_converter=1.0, plot=True, write=True):
+        """水と泥の静的荷重を合成して出力します。"""
+        load_name = "Water_and_Mud"
+
+        _, y = self.__gen_side_sample(h=self.dep_up, num=num)
+        wat_trend = interpolate.interp1d(x=self.sta_wat[0], y=self.sta_wat[1])
+        mud_trend = interpolate.interp1d(x=self.mud[0], y=self.mud[1], bounds_error=False,
+                                         fill_value=(self.mud[1][0], self.mud[1][-1]))
+        p = wat_trend(y) + mud_trend(y)
+        if plot:
+            _plot_side_load(p, y, self.dep_up, load_name, name=self.name)
+        if write:
+            _write_side_load(pres=p, y=y, load_name=load_name, offset=offset, unit_conv=unit_converter, name=self.name)
+        pass
 
 
 # -----

@@ -69,7 +69,9 @@ def mud(x, y, h, w=12.0, ce=0.5):
     :return: 接触面に対して垂直に作用する泥圧(KN/m2)
     """
     depth = h - y
-    pv = w * depth
-    ph = ce * pv
+    slant = cal_slant(x, y)
+    slant = np.deg2rad(slant)
+    pv = w * depth * np.sin(slant)
+    ph = ce * w * depth * np.cos(slant)
     p = np.sqrt(pv**2 + ph**2)
     return p
