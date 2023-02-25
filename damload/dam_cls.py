@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from typing import List
 
+mpl.rcParams.update(mpl.rcParamsDefault)  # Reset RC
+font = {'family': 'Yu Mincho',
+        'size': 18}
+mpl.rc('font', **font)
+
 
 class Dam:
     """
@@ -114,13 +119,13 @@ class Dam:
 
     def __plot_buoyancy(self):
         mpl.use('agg')
-        fig, ax = plt.subplots(figsize=(12, 4), layout='tight')
+        fig, ax = plt.subplots(figsize=(8, 3), layout='tight')
         ax.plot(self.buoyancy[0], self.buoyancy[1])
         ax.invert_yaxis()
         ax.set_xlabel('Distance(m)')
         ax.set_ylabel('Buoyancy(KN/m2)')
         ax.set_title("Buoyancy")
-        fig.savefig(f"{self.name}_Buoyancy.png")
+        fig.savefig(f"{self.name}_Buoyancy.png", dpi=500)
         return self
 
     def __cal_static_wat(self, num=10, offset=0.0, unit_converter=1.0, plot=True, write=True):
@@ -184,13 +189,13 @@ class Dam:
 def _plot_side_load(pres, y, h, load_name, name):
     mpl.use('agg')
     depth = h - y
-    fig, ax = plt.subplots(figsize=(5, 8), layout='tight')
+    fig, ax = plt.subplots(figsize=(4.5, 6), layout='tight')
     ax.plot(pres, depth)
     ax.invert_yaxis()
     ax.invert_xaxis()
     ax.set_xlabel(f'{load_name} (KN/m2)')
     ax.set_ylabel('Depth (m)')
-    fig.savefig(f"{name}_{load_name}.png")
+    fig.savefig(f"{name}_{load_name}.png", dpi=500)
     pass
 
 
