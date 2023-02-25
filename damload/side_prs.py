@@ -58,7 +58,25 @@ def stat_w(y, h, w=9.8):
     return prs
 
 
-def mud(x, y, h, w=12.0, ce=0.5):
+# def mud(x, y, h, w=12.0, ce=0.5):
+#     """
+#     泥圧を計算する。
+#     :param ce: 泥圧係数(0.4~0.6)
+#     :param x:　計算する点のｘ座標
+#     :param y:　計算する点のｙ座標
+#     :param h:　泥の深さ
+#     :param w:　泥土の水中単位体積重量(KN/m3)
+#     :return: 接触面に対して垂直に作用する泥圧(KN/m2)
+#     """
+#     depth = h - y
+#     slant = cal_slant(x, y)
+#     slant = np.deg2rad(slant)
+#     pv = w * depth * np.sin(slant)
+#     ph = ce * w * depth * np.cos(slant)
+#     p = np.sqrt(pv**2 + ph**2)
+#     return p
+
+def mud(x, y, h, mesh_size=None, w=12.0, ce=0.5):
     """
     泥圧を計算する。
     :param ce: 泥圧係数(0.4~0.6)
@@ -66,12 +84,17 @@ def mud(x, y, h, w=12.0, ce=0.5):
     :param y:　計算する点のｙ座標
     :param h:　泥の深さ
     :param w:　泥土の水中単位体積重量(KN/m3)
-    :return: 接触面に対して垂直に作用する泥圧(KN/m2)
+    :param mesh_size: 結果を集中力に換算するしたいと, メッシュの大きさを設定する。
+    :return: 鉛直と水平に作用する泥圧(KN/m2)
     """
     depth = h - y
     slant = cal_slant(x, y)
     slant = np.deg2rad(slant)
-    pv = w * depth * np.sin(slant)
-    ph = ce * w * depth * np.cos(slant)
-    p = np.sqrt(pv**2 + ph**2)
-    return p
+    if isinstance(mesh_size, (int, float)):
+        scaling_v = np.sin(slant) * mesh_size
+        scaling_h = np.cos(slant) * mesh_size
+    else:
+        scaling_v, scaling_h = (1, 1)
+    pv = w * depth * scaling_v
+    ph = ce * w * depth * scaling_h
+    return pv, ph

@@ -80,8 +80,8 @@ class Dam:
                 raise ValueError(
                     "'load_names' should be a str list which contains 'Dynamic', 'Static', 'Mud' or 'Buoyancy'.")
 
-        if "Static" and "Mud" in load_names:
-            self.__side_syn(num=num, offset=offset, unit_converter=unit_converter, plot=plot, write=write)
+        # if "Static" and "Mud" in load_names:
+        #     self.__side_syn(num=num, offset=offset, unit_converter=unit_converter, plot=plot, write=write)
         return self
 
     def __cal_dyn_water(self, num=100, offset=0.0, unit_converter=1.0, plot=True, write=True):
@@ -142,18 +142,21 @@ class Dam:
             _write_side_load(pres=p, y=y, load_name=load_name, offset=offset, unit_conv=unit_converter, name=self.name)
         return self
 
-    def __cal_mud(self, num=10, offset=0.0, unit_converter=1.0, plot=True, write=True):
+    def __cal_mud(self, num=10, offset=0.0, unit_converter=1.0, plot=True, write=True, mesh_size=None):
         """
         モジュールを呼び出し泥圧を計算する。
         """
-        load_name = "Mud_Pressure"
+        load_name = ["Mud_Pressure_v", "Mud_Pressure_h"]
         x, y = self.__gen_side_sample(h=self.dep_mud, num=num)
-        pres = sp.mud(x, y, h=self.dep_mud, w=self.w_mud, ce=self.ce)
-        self.mud = np.array([y, pres], dtype=float)
+        pres_v, pres_h = sp.mud(x, y, h=self.dep_mud, w=self.w_mud, ce=self.ce, mesh_size=1.0)
+        self.mud = np.array([y, pres_v, pres_h], dtype=float)
         if plot:
-            _plot_side_load(pres, y, self.dep_mud, load_name, name=self.name)
+            _plot_side_load(pres_v, y, self.dep_mud, load_name[0], name=self.name)
+            _plot_side_load(pres_h, y, self.dep_mud, load_name[1], name=self.name)
         if write:
-            _write_side_load(pres=pres, y=y, load_name=load_name, offset=offset, unit_conv=unit_converter,
+            _write_side_load(pres=pres_v, y=y, load_name=load_name[0], offset=offset, unit_conv=unit_converter,
+                             name=self.name)
+            _write_side_load(pres=pres_h, y=y, load_name=load_name[1], offset=offset, unit_conv=unit_converter,
                              name=self.name)
         return self
 
