@@ -142,13 +142,14 @@ class Dam:
             _write_side_load(pres=p, y=y, load_name=load_name, offset=offset, unit_conv=unit_converter, name=self.name)
         return self
 
-    def __cal_mud(self, num=10, offset=0.0, unit_converter=1.0, plot=True, write=True, mesh_size=None):
+    def __cal_mud(self, num=10, offset=0.0, unit_converter=1.0, plot=True, write=True):
         """
         モジュールを呼び出し泥圧を計算する。
         """
         load_name = ["Mud_Pressure_v", "Mud_Pressure_h"]
         x, y = self.__gen_side_sample(h=self.dep_mud, num=num)
         pres_v, pres_h = sp.mud(x, y, h=self.dep_mud, w=self.w_mud, ce=self.ce, mesh_size=1.0)
+        pres_v = -pres_v
         self.mud = np.array([y, pres_v, pres_h], dtype=float)
         if plot:
             _plot_side_load(pres_v, y, self.dep_mud, load_name[0], name=self.name)
